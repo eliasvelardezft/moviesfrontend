@@ -10,6 +10,7 @@ const Input = (props) => {
         sm:h-9 sm:w-3/4 sm:rounded-full sm:text-xl
         ${props.className}`}
       onChange={props.onChange}
+      required={props.required}
     />
   )
 }

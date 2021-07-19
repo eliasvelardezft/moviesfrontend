@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import { Movie, MovieDetail } from '../../components';
-import { get } from '../../functions';
+import { Movie, MovieDetail, AddMovie } from '../../components';
+import { get, post } from '../../functions';
 import urls from '../../apiUrls';
 
 
@@ -39,8 +39,21 @@ const Home = (props) => {
     setMoviesUrl(urls[`${event.target.value}`]);
   }
 
+  const [addMovieModal, setAddMovieModal] = useState(false);
   const addMovie = () => {
     console.log('adding movie!');
+    setAddMovieModal(prev => !prev);
+  }
+
+  const submitMovie = (movie) => {
+    post(urls.getMovies, movie)
+      .then(res => {
+        if(res.id) {
+          alert('Movie succesfully added.');
+        } else {
+          alert('There was an error adding the movie.');
+        }
+      })
   }
   const editMovie = () => {
     console.log('editing movie!');
@@ -48,6 +61,7 @@ const Home = (props) => {
   const deleteMovie = () => {
     console.log('deleting movie!');
   }
+
 
 
   return (
@@ -67,6 +81,13 @@ const Home = (props) => {
           <option value="ratingDesc">rating descending</option> */}
         </select>
       </div>
+      {
+          addMovieModal
+          ?
+          <AddMovie submitMovie={submitMovie}/>
+          :
+          null
+      }
       <ul>
         {
           movies.map(m => {

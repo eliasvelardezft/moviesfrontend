@@ -11,7 +11,7 @@ const post = (url, data) => {
         if(res.ok) {
             return res.json();
         } else {
-            return res.statusText;
+            return res.status;
         }
     })
     .then(res => res);
