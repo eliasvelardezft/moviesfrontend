@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import { Movie, MovieDetail, AddMovie } from '../../components';
-import { get, post } from '../../functions';
+import { Movie, MovieDetail, AddMovie, EditMovie } from '../../components';
+import { get, patch, post, httpdelete } from '../../functions';
 import urls from '../../apiUrls';
 
 
@@ -45,21 +45,45 @@ const Home = (props) => {
     setAddMovieModal(prev => !prev);
   }
 
-  const submitMovie = (movie) => {
-    post(urls.getMovies, movie)
+  const submitMovie = (movie, isEdit) => {
+    if (!isEdit) {
+      post(urls.getMovies, movie)
+        .then(res => {
+          if(res.id) {
+            alert('Movie succesfully added.');
+            getMovies();
+          } else {
+            alert('There was an error adding the movie.');
+          }
+        })      
+    } else {
+      patch(`${urls.getMovies}${selectedMovie.id}/`, movie)
+        .then(res => {
+          if(res.id) {
+            alert('Movie succesfully edited.');
+            getMovies();
+          } else {
+            alert('There was an error editing the movie.');
+          }
+        });
+    }
+  }
+  const [editMovieModal, setEditMovieModal] = useState(false)
+  const editMovie = (movie) => {
+    setSelectedMovie(movie);
+    setEditMovieModal(prev => !prev);
+  }
+  const deleteMovie = (m) => {
+    console.log('deleting movie!', m);
+    httpdelete(`${urls.getMovies}${m.id}/`, localStorage.getItem('token'))
       .then(res => {
-        if(res.id) {
-          alert('Movie succesfully added.');
+        if(res.status === 204) {
+          alert('movie succesfully deleted');
+          getMovies();
         } else {
-          alert('There was an error adding the movie.');
+          alert('there was an error deleting the movie.');
         }
       })
-  }
-  const editMovie = () => {
-    console.log('editing movie!');
-  }
-  const deleteMovie = () => {
-    console.log('deleting movie!');
   }
 
 
@@ -84,7 +108,11 @@ const Home = (props) => {
       {
           addMovieModal
           ?
-          <AddMovie submitMovie={submitMovie}/>
+          <AddMovie submitMovie={submitMovie} movie={selectedMovie}/>
+          :
+          editMovieModal
+          ?
+          <EditMovie submitMovie={submitMovie} movie={selectedMovie}/>
           :
           null
       }
@@ -96,11 +124,11 @@ const Home = (props) => {
                 <li className='flex justify-between'>
                   <Movie movie={m}/>
                 </li>
-                <button onClick={editMovie} 
+                <button onClick={() => editMovie(m)} 
                   className='mx-7 p-1 rounded-lg border-gray-200 bg-blue-300'>
                   Edit
                 </button>
-                <button onClick={deleteMovie} 
+                <button onClick={() => deleteMovie(m)} 
                   className='mx-7 p-1 rounded-lg border-gray-200 bg-blue-300'>
                   Delete
                 </button>

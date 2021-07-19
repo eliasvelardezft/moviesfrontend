@@ -2,12 +2,12 @@ import React, { useState, useEffect} from 'react';
 
 import { Label, Button, InputField } from '.';
 
-const AddMovie = (props) => {
+const EditMovie = (props) => {
 
-    const [movieTitle, setMovieTitle] = useState();
-    const [movieReleaseDate, setMovieReleaseDate] = useState();
-    const [movieGenre, setMovieGenre] = useState();
-    const [moviePlot, setMoviePlot] = useState();
+    const [movieTitle, setMovieTitle] = useState(props.movie.title);
+    const [movieReleaseDate, setMovieReleaseDate] = useState(props.movie.release_date);
+    const [movieGenre, setMovieGenre] = useState(props.movie.genre);
+    const [moviePlot, setMoviePlot] = useState(props.movie.plot);
     const submitMovie = (e) => {
         e.preventDefault();
 
@@ -15,39 +15,44 @@ const AddMovie = (props) => {
             'title': movieTitle,
             'release_date': movieReleaseDate,
             'genre': movieGenre,
-            'plot': moviePlot,
-            'ratings': []
+            'plot': moviePlot
         };
 
-        props.submitMovie(newMovie, false);
-        document.getElementById('new-movie-form').reset();
+        console.log(newMovie);
+
+        props.submitMovie(newMovie, true);
+        document.getElementById('edit-movie-form').reset();
 
     }
 
-
+    let movie = props.movie
     return(
         <div>
-            <form action="" id='new-movie-form' onSubmit={submitMovie}
+            <form action="" id='edit-movie-form' onSubmit={submitMovie}
                 className='flex flex-col items-center
                 m-4 w-2/5'>
                 <Label>Title</Label>
                 <InputField required
+                value={movieTitle}
                 onChange={e => setMovieTitle(e.target.value)}>                    
                 </InputField>
 
                 <Label>Release Date </Label>
                 <InputField type='date' required
+                value={movieReleaseDate}
                 onChange={e => setMovieReleaseDate(e.target.value)}>
                 </InputField>
 
                 <Label>Genre</Label>
                 <InputField required
+                value={movieGenre}
                 onChange={e => setMovieGenre(e.target.value)}>
                 </InputField>
                 
                 <Label>Plot</Label>
                 <textarea form='new-movie-form' required
                     name="plot" id="plot" cols="20" rows="3"
+                    value={moviePlot}
                     className='border-2 border-purple-400 
                     rounded-lg focus:outline-none p-2'
                     onChange={e => setMoviePlot(e.target.value)}>
@@ -63,4 +68,4 @@ const AddMovie = (props) => {
     )
 }
 
-export default AddMovie;
+export default EditMovie;
