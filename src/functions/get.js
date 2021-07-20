@@ -1,11 +1,18 @@
-const get = (url, token) => {
+const get = (url, token, ...headers) => {
+    let headersObj = {
+        Authorization: `Authorization ${token}`,
+        'Content-type': 'application/json',
+    }
+    // add each header from the function call to the request headers
+    headers.forEach(p => {
+        Object.keys(p).forEach(k => {
+            headersObj[k] = p[k]
+        })
+    })
     return fetch(url, {
         method: 'GET',
         mode: 'cors',
-        headers: {
-            Authorization: `Authorization ${token}`,
-            'Content-type': 'application/json'
-        }
+        headers: headersObj
     })
         .then(res => {
             if(res.ok) {

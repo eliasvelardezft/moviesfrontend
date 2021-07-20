@@ -7,10 +7,10 @@ import urls from '../../apiUrls';
 
 const Home = (props) => {
   const [movies, setMovies] = useState([]);
-  const [moviesUrl, setMoviesUrl] = useState([urls['getMovies']])
+  const [sorting, setSorting] = useState('')
   useEffect(() => {
     getMovies();
-  }, [moviesUrl])
+  }, [sorting])
 
   const [isDetail, setIsDetail] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState({});
@@ -21,7 +21,7 @@ const Home = (props) => {
   }
 
   const getMovies = () => {
-    get(moviesUrl, localStorage.getItem('token'))
+    get(urls.getMovies, localStorage.getItem('token'), { 'searchsort': sorting })
     .then(data => {
       setMovies(data);
       console.log('DATA: ', data);
@@ -36,7 +36,7 @@ const Home = (props) => {
 
   const sortMovies = (event) => {
     console.log('SORTING: ', event.target.value);
-    setMoviesUrl(urls[`${event.target.value}`]);
+    setSorting(event.target.value);
   }
 
   const [addMovieModal, setAddMovieModal] = useState(false);
@@ -99,10 +99,10 @@ const Home = (props) => {
           Add movie
         </button>
         <select name="sorting" id="sorting" onChange={sortMovies}>
-          <option value="getMoviesAscDate">date ascending</option>
-          <option value="getMoviesDescDate">date descending</option>
-          {/* <option value="ratingAsc">rating ascending</option>
-          <option value="ratingDesc">rating descending</option> */}
+          <option value="ascDate">date ascending</option>
+          <option value="descDate">date descending</option>
+          <option value="ascRating">rating ascending</option>
+          <option value="descRating">rating descending</option>
         </select>
       </div>
       {

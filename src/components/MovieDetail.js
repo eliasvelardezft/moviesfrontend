@@ -14,6 +14,9 @@ const MovieDetail = ({ movie }) => {
                 setRatings(res.ratings);
             })
     }
+    useEffect(() => {
+        getRatings();
+    }, [movie])
 
     const submitRating = (rating) => {
         patch(`${urls.getMovies}${movie.id}/`, {
