@@ -6,6 +6,10 @@ import urls from '../../apiUrls';
 
 
 const Home = (props) => {
+
+  const [user, setUser] = useState(localStorage.getItem('username'));
+  const [token, setToken] = useState(localStorage.getItem('token'));
+
   const [movies, setMovies] = useState([]);
   const [sorting, setSorting] = useState('')
   useEffect(() => {
@@ -21,7 +25,7 @@ const Home = (props) => {
   }
 
   const getMovies = () => {
-    get(urls.getMovies, localStorage.getItem('token'), { 'searchsort': sorting })
+    get(urls.getMovies, token, { 'searchsort': sorting })
     .then(data => {
       setMovies(data);
       console.log('DATA: ', data);
@@ -75,7 +79,7 @@ const Home = (props) => {
   }
   const deleteMovie = (m) => {
     console.log('deleting movie!', m);
-    httpdelete(`${urls.getMovies}${m.id}/`, localStorage.getItem('token'))
+    httpdelete(`${urls.getMovies}${m.id}/`, token)
       .then(res => {
         if(res.status === 204) {
           alert('movie succesfully deleted');
@@ -119,17 +123,20 @@ const Home = (props) => {
       <ul>
         {
           movies.map(m => {
+            console.log(m.user === user || m.user === null);
             return (
               <div key={m.id} className='flex justify-between'>
                 <li className='flex justify-between'>
                   <Movie movie={m}/>
                 </li>
                 <button onClick={() => editMovie(m)} 
-                  className='mx-7 p-1 rounded-lg border-gray-200 bg-blue-300'>
+                  className={`${m.user === user || m.user === null ? '' : 'hidden'}
+                    mx-7 p-1 rounded-lg border-gray-200 bg-blue-300`}>
                   Edit
                 </button>
                 <button onClick={() => deleteMovie(m)} 
-                  className='mx-7 p-1 rounded-lg border-gray-200 bg-blue-300'>
+                  className={` ${m.user === user || m.user === null ? '' : 'hidden'}
+                    mx-7 p-1 rounded-lg border-gray-200 bg-blue-300`}>
                   Delete
                 </button>
                 <button onClick={() => seeMore(m)}>See more!</button>

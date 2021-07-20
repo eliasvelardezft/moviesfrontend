@@ -8,6 +8,7 @@ const EditMovie = (props) => {
     const [movieReleaseDate, setMovieReleaseDate] = useState(props.movie.release_date);
     const [movieGenre, setMovieGenre] = useState(props.movie.genre);
     const [moviePlot, setMoviePlot] = useState(props.movie.plot);
+    const [movieUser, setMovieUser] = useState(props.movie.user)
     const submitMovie = (e) => {
         e.preventDefault();
 
@@ -15,7 +16,8 @@ const EditMovie = (props) => {
             'title': movieTitle,
             'release_date': movieReleaseDate,
             'genre': movieGenre,
-            'plot': moviePlot
+            'plot': moviePlot,
+            'user': movieUser
         };
 
         console.log(newMovie);

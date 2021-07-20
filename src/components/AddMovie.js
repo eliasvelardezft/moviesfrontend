@@ -16,6 +16,7 @@ const AddMovie = (props) => {
             'release_date': movieReleaseDate,
             'genre': movieGenre,
             'plot': moviePlot,
+            'user': localStorage.getItem('username'),
             'ratings': []
         };
 

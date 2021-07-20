@@ -12,7 +12,8 @@ const AddRating = (props) => {
 
         let ratingObj = {
             'rating': parseInt(rating),
-            'comment': comment
+            'comment': comment,
+            'user': localStorage.getItem('username')
         }
 
         props.submitRating(ratingObj);
