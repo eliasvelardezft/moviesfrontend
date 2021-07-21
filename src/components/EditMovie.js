@@ -20,7 +20,6 @@ const EditMovie = (props) => {
             'user': movieUser
         };
 
-        console.log(newMovie);
 
         props.submitMovie(newMovie, true);
         document.getElementById('edit-movie-form').reset();

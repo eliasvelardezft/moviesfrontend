@@ -1,6 +1,6 @@
 const get = (url, token, ...headers) => {
     let headersObj = {
-        Authorization: `Authorization ${token}`,
+        Authorization: `Token ${token}`,
         'Content-type': 'application/json',
     }
     // add each header from the function call to the request headers

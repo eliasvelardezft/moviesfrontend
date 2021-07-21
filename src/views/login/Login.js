@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { InputField, Button, Label } from '../../components';
-import { get, post } from '../../functions';
+import { post } from '../../functions';
 import urls from '../../apiUrls';
 
 import bg from '../../img/bg.jpg';
@@ -23,7 +23,7 @@ class Login extends Component {
     }
     
 
-    post(urls.login, data)
+    post(urls.login, data, false)
       .then(resp => {
         if(resp.user.username) {
 

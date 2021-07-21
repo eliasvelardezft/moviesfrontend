@@ -3,7 +3,7 @@ const httpdelete = (url, token) => {
         method: 'DELETE',
         mode: 'cors',
         headers: {
-            Authorization: `Authorization ${token}`,
+            Authorization: `Token ${token}`,
             'Content-type': 'application/json',
         }
     })

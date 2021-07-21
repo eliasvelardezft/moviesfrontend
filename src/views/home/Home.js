@@ -1,17 +1,27 @@
 import React, { useEffect, useState } from 'react';
 
-import { Movie, MovieDetail, AddMovie, EditMovie } from '../../components';
+import { Movie, MovieDetail, AddMovie, EditMovie, UserHeader } from '../../components';
 import { get, patch, post, httpdelete } from '../../functions';
 import urls from '../../apiUrls';
 
 
 const Home = (props) => {
 
+  const getUser = () => {
+    get(`${urls.usersUrl}${localStorage.getItem('username')}`, localStorage.getItem('token'))
+    .then(data => {
+      setUser(data);
+    })
+  }
+
   const [user, setUser] = useState(localStorage.getItem('username'));
+  useEffect(() => {
+    getUser();
+  }, [])
   const [token, setToken] = useState(localStorage.getItem('token'));
 
   const [movies, setMovies] = useState([]);
-  const [sorting, setSorting] = useState('')
+  const [sorting, setSorting] = useState('descDate')
   useEffect(() => {
     getMovies();
   }, [sorting])
@@ -22,6 +32,7 @@ const Home = (props) => {
   const seeMore = (movie) => {
     setIsDetail(pre => !pre);
     setSelectedMovie(movie);
+    getMovies();
   }
 
   const getMovies = () => {
@@ -39,13 +50,11 @@ const Home = (props) => {
   }
 
   const sortMovies = (event) => {
-    console.log('SORTING: ', event.target.value);
     setSorting(event.target.value);
   }
 
   const [addMovieModal, setAddMovieModal] = useState(false);
   const addMovie = () => {
-    console.log('adding movie!');
     setAddMovieModal(prev => !prev);
   }
 
@@ -78,7 +87,6 @@ const Home = (props) => {
     setEditMovieModal(prev => !prev);
   }
   const deleteMovie = (m) => {
-    console.log('deleting movie!', m);
     httpdelete(`${urls.getMovies}${m.id}/`, token)
       .then(res => {
         if(res.status === 204) {
@@ -90,12 +98,34 @@ const Home = (props) => {
       })
   }
 
+  const addToWatchList = (m) => {
+    let movies_watchlist_ids = user.movies_watchlist.map(m => m.id)
+    patch(`${urls.usersUrl}${user.username}/`, {
+      'movies_watchlist': [...movies_watchlist_ids, m.id]
+    })
+      .then(data => {
+        getUser();
+      })
+  }
+
+  const removeMovieFromWatchlist = (m) => {
+    let newMoviesWatchlistIds = user.movies_watchlist.map(movie => movie.id).filter(movie => movie !== m.id);
+    patch(`${urls.usersUrl}${user.username}/`, {
+      'movies_watchlist': [...newMoviesWatchlistIds]
+    })
+      .then(data => {
+        getUser();
+        console.log('hola');
+      })
+  }
+
 
 
   return (
     !isDetail 
     ? 
     <div className='flex flex-col relative h-screen m-0'>
+      <UserHeader user={user} removeMovieFromWatchlist={removeMovieFromWatchlist}/>
       <div className='flex'>
         <h1 className='text-red-500e'>Movies</h1>
         <button onClick={addMovie} 
@@ -103,10 +133,10 @@ const Home = (props) => {
           Add movie
         </button>
         <select name="sorting" id="sorting" onChange={sortMovies}>
-          <option value="ascDate">date ascending</option>
           <option value="descDate">date descending</option>
-          <option value="ascRating">rating ascending</option>
+          <option value="ascDate">date ascending</option>
           <option value="descRating">rating descending</option>
+          <option value="ascRating">rating ascending</option>
         </select>
       </div>
       {
@@ -120,43 +150,72 @@ const Home = (props) => {
           :
           null
       }
-      <ul>
-        {
-          movies.map(m => {
-            console.log(m.user === user || m.user === null);
-            return (
-              <div key={m.id} className='flex justify-between'>
-                <li className='flex justify-between'>
-                  <Movie movie={m}/>
-                </li>
-                <button onClick={() => editMovie(m)} 
-                  className={`${m.user === user || m.user === null ? '' : 'hidden'}
-                    mx-7 p-1 rounded-lg border-gray-200 bg-blue-300`}>
-                  Edit
-                </button>
-                <button onClick={() => deleteMovie(m)} 
-                  className={` ${m.user === user || m.user === null ? '' : 'hidden'}
-                    mx-7 p-1 rounded-lg border-gray-200 bg-blue-300`}>
-                  Delete
-                </button>
-                <button onClick={() => seeMore(m)}>See more!</button>
-              </div>
-            )
-          })
-        }
-      </ul>
+
+          <table className='text-center'>
+              <thead>
+                <tr>
+                  <th className='border-2 border-purple-300'>Title</th>
+                  <th className='border-2 border-purple-300'>Release date</th>
+                  <th className='border-2 border-purple-300'>Genre</th>
+                  <th className='border-2 border-purple-300'>Average rating</th>
+                  <th className='border-2 border-purple-300'>Edit</th>
+                  <th className='border-2 border-purple-300'>Delete</th>
+                  <th className='border-2 border-purple-300'>Watch later</th>
+                  <th className='border-2 border-purple-300'>See more</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  movies.map(m => {
+                    {/* console.log(`m.user: ${m.user} ${user}`)
+                    console.log(`ES?: ${m.title} ${m.user === user.username || m.user === null}`); */}
+                    return(
+                      <tr key={m.id}>
+                        <td className='border-2 border-purple-300'>{m.title}</td>
+                        <td className='border-2 border-purple-300'>{m.release_date}</td>
+                        <td className='border-2 border-purple-300'>{m.genre}</td>
+                        <td className='border-2 border-purple-300'>{m.average_rating}</td>
+                        <td className='border-2 border-purple-300'>
+                          <button onClick={() => editMovie(m)} 
+                            className={`${m.user === user.username || m.user === null ? '' : 'hidden'}
+                              mx-7 p-1 rounded-lg border-gray-200 bg-blue-300`}>
+                            Edit
+                          </button>
+                        </td>
+                        <td className='border-2 border-purple-300'>
+                          <button onClick={() => deleteMovie(m)} 
+                            className={` ${m.user === user.username || m.user === null ? '' : 'hidden'}
+                            mx-7 p-1 rounded-lg border-gray-200 bg-blue-300`}>
+                            Delete
+                          </button>
+                        </td>
+                        <td className='border-2 border-purple-300'>
+                          <button onClick={() => addToWatchList(m)}
+                            className='mx-7 p-1 rounded-lg border-gray-200 bg-blue-300'>
+                            watch later
+                          </button>
+                        </td>
+                        <td className='border-2 border-purple-300'>
+                          <button onClick={() => seeMore(m)}>See more!</button>
+                        </td>
+                      </tr>
+                    )
+                  })
+                }
+              </tbody>
+          </table>
+
       
-      <div className='absolute bottom-0'>
+      <div className='bottom-0'>
         <button onClick={logout}>Logout</button>
       </div>
     </div>
     :
-    <div className='flex flex-col'>
-      <h1>Hola!</h1>
+    <div className='flex flex-col relative'>
       <MovieDetail movie={selectedMovie}/>
       <div className='absolute bottom-0'>
         <button onClick={seeMore} 
-          className='rounded-lg border-gray-200 bg-blue-300'>
+          className='rounded-lg border-gray-200 bg-blue-300 absolute bottom-0'>
           Back!
         </button>
       </div>

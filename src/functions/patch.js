@@ -3,7 +3,8 @@ const patch = (url, data) => {
       mode: 'cors',
       method: 'PATCH',
       headers: {
-        'Content-type': 'application/json'
+        'Content-type': 'application/json',
+        'Authorization': `Token ${localStorage.getItem('token')}`
       },
       body: JSON.stringify(data)
     })

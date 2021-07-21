@@ -1,10 +1,15 @@
-const post = (url, data) => {
-    return fetch(url, {
+const post = (url, data, token=true) => {
+  let he = {
+    'Content-type': 'application/json'
+  }  
+  if(token) {
+    he['Authorization'] = `Token ${localStorage.getItem('token')}`
+  }
+  
+  return fetch(url, {
       mode: 'cors',
       method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
-      },
+      headers: he,
       body: JSON.stringify(data)
     })
     .then(res => {
