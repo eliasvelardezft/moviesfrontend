@@ -5,9 +5,15 @@ import CreateUser from './views/createUser/CreateUser';
 import Home from './views/home/Home';
 import AuthRoute from './AuthRoute';
 
-import {
+// import {
+//     Route,
+//     BrowserRouter as Router,
+//     Switch
+// } from 'react-router-dom';
+
+import  {
     Route,
-    BrowserRouter as Router,
+    HashRouter as Router,
     Switch
 } from 'react-router-dom';
 
