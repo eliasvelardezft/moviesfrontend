@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-import { Watchlist } from '.';
+import { Watchlist, Button } from '.';
 
 const UserHeader = ({ user, removeMovieFromWatchlist }) => {
     
-    const [showWatchlist, setShowWatchlist] = useState(true);
+    const [showWatchlist, setShowWatchlist] = useState(false);
     const toggleWatchlist = () => {
         setShowWatchlist(prev => !prev);
     }
@@ -16,24 +16,19 @@ const UserHeader = ({ user, removeMovieFromWatchlist }) => {
 
     
     return(
-        <div>
-            <nav className='flex'>
-                <p>benvenido {user.username}</p>
-
-                <button className='rounded-lg border-1 border-gray-200 bg-blue-100 justify-between'
+        <div className='flex justify-around relative'>
+            <h1 className='text-2xl font-semibold text-center mb-6'>
+                Bienvenido {user.username}
+            </h1>
+            <div className='flex flex-col items-center'>
+                <Button color='rgb(167, 139, 250)'
                     onClick={toggleWatchlist}>
                     watchlist
-                </button>
-
-                {
-                    showWatchlist
-                    ?
-                    <Watchlist list={watchlist || []} removeMovie={removeMovieFromWatchlist}/>
-                    :
-                    null
-                }
-
-            </nav>
+                </Button>
+                <Watchlist list={watchlist || []} removeMovie={removeMovieFromWatchlist}
+                    visible={showWatchlist}
+                />
+            </div>
         </div>
     )
 }

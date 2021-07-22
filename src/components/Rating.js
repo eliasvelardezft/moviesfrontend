@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react';
 
-const Rating = ({ rating }) => {
+const Rating = ({ rating, index }) => {
+    
+    let bgColor = (index % 2 === 0) ? 'bg-red-200' : 'bg-purple-200';
+
     return (
-        <div className='m-2 border-1'>
-        <ul className='list-disc'>
-            <li>
-                rating: {rating.rating}
-            </li>
-            <li>
-                comment: {rating.comment}
-            </li>
-            <li>
-                user: {rating.user}
-            </li>
-        </ul>
-        </div>
+            <tr className={bgColor}>
+                <td className='rounded-l-lg'>
+                    {
+                        [...new Array(rating.rating)].map((s, i) => {
+
+                            return (
+                                <span key={i}>{'\u2728'}</span>
+                            )
+                        })
+                    }
+                </td>
+                <td>{rating.comment}</td>
+                <td className='rounded-r-lg'>{rating.user}</td>
+            </tr>
     )
 }
 

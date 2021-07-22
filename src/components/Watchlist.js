@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+
 import { get, patch } from '../functions';
 import urls from '../apiUrls';
+import { Button } from '.';
 
-const Watchlist = ({ list, removeMovie }) => {
+const Watchlist = ({ list, removeMovie, visible }) => {
     const [watchlist, setWatchlist] = useState(list);
     useEffect(() => {
         setWatchlist(list);
@@ -13,22 +15,34 @@ const Watchlist = ({ list, removeMovie }) => {
     }
 
     return(
-        <div className=''>
-            {
-                watchlist.map(m => {
-                    return (
-                        <div key={m.id}>
-                            {m.title}
-                            <button className='px-2 bg-purple-100 ml-3 rounded-lg'
-                                onClick={() => removeFromWatchlist(m)}>
-                                x
-                            </button>
-                        </div>
+        <table className='absolute top-12'>
+            <tbody>
+                {
+                    watchlist.map(m => {
+                        return (
+                            <tr key={m.id}
+                                className={`bg-red-300 py-2 px-3 flex justify-between 
+                                ${visible ? ' visible opacity-100' : 'h-0 invisible opacity-0'}
+                                transition-opacity duration-200 ease-in-out
+                                `}>
+                                <td>
+                                    <span>{m.title}</span>
+                                </td>
+                                <td>
+                                    <Button color='rgb(116, 160, 232)'
+                                        onClick={() => removeFromWatchlist(m)}>
+                                        x
+                                    </Button>
 
-                    )
-                })
-            }
-        </div>
+                                </td>
+                                
+                            </tr>
+
+                        )
+                    })
+                }
+            </tbody>
+        </table>
     )
 }
 

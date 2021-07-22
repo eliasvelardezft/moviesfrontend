@@ -5,7 +5,18 @@ import { post, patch, get } from '../functions';
 import urls from '../apiUrls';
 
 
-const MovieDetail = ({ movie }) => {
+const MovieDetail = ({ m }) => {
+
+    const [movie, setMovie] = useState(m);
+    const getMovie = () => {
+        get(`${urls.getMovies}${movie.id}/`, localStorage.getItem('token'))
+            .then(data => {
+                setMovie(data);
+            })
+    }
+    useEffect(() => {
+        getMovie();
+    }, [m])
 
     const [ratings, setRatings] = useState(movie.ratings)
     const getRatings = () => {
@@ -16,7 +27,7 @@ const MovieDetail = ({ movie }) => {
     }
     useEffect(() => {
         getRatings();
-    }, [movie])
+    }, [m])
 
     const submitRating = (rating) => {
         patch(`${urls.getMovies}${movie.id}/`, {
@@ -24,29 +35,36 @@ const MovieDetail = ({ movie }) => {
         })
         .then(res => {
             getRatings();
+            getMovie();
             document.getElementById('add-rating-form').reset();
             document.getElementById('select-rating').value = 1;
         });
     }  
 
     return (
-        <div className=''>
-            <p>title: {movie.title}</p>
-            <p>release date: {movie.release_date}</p>
-            <p>genre: {movie.genre}</p>
-            <p>plot: {movie.plot}</p>
+        <div className='flex flex-col m-10'>
+            <div className='bg-purple-300 rounded-lg p-6 w-1/2 mx-auto'>
+                <h1 className='text-4xl font-bold text-center mb-6'>
+                    {movie.title}
+                </h1>
+                <p>release date: {movie.release_date}</p>
+                <p>genre: {movie.genre}</p>
+                <p>plot: {movie.plot}</p>
+            </div>
 
             <AddRating submitRating={submitRating}/>
 
-            <ul>
-                {
-                    ratings.map(r => {
-                        return (
-                            <Rating key={r.id} rating={r} />
-                        )
-                    })
-                }
-            </ul>
+            <table className='text-center mx-4 border-separate spacing'>
+                <tbody>
+                    {
+                        ratings.map((r, index) => {
+                            return(
+                                <Rating key={index} rating={r} index={index}/>
+                            )
+                        })
+                    }
+                </tbody>
+            </table>
             
         </div>
     )

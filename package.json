@@ -4,10 +4,9 @@
   "description": "react template with tailwindcss",
   "main": "index.js",
   "scripts": {
-    "start": "npm run watch:css && webpack serve --mode development --open --hot",
-    "build": "npm run build:css && webpack --mode production",
-    "build:css": "postcss src/tailwind.css -o src/index.css",
-    "watch:css": "postcss src/tailwind.css -o src/index.css -w"
+    "start": "webpack serve --mode development --open --hot",
+    "build": "webpack --mode production",
+    "build:css": "postcss src/tailwind.css -o src/index.css"
   },
   "author": "elias velardez",
   "license": "MIT",

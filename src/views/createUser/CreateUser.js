@@ -45,7 +45,7 @@ class CreateUser extends Component {
 
   render() {
     return(
-      <div style={{backgroundImage: `url(${bg})`}}
+      <div
         className='flex flex-col h-screen items-center 
           backdrop-filter backdrop-blur-xl 
           bg-opacity-40 bg-no-repeat bg-cover relative'>
@@ -81,7 +81,7 @@ class CreateUser extends Component {
               className=''
               onChange={(e) => this.setState({password:e.target.value})}
             />
-            <Button className='mt-8' onClick={this.handleCreateUser}> 
+            <Button className='mt-8' color='rgb(167, 139, 250)' onClick={this.handleCreateUser}> 
               Create
             </Button>
             <div className='flex flex-col mt-10'>

@@ -54,8 +54,8 @@ const AddMovie = (props) => {
                     onChange={e => setMoviePlot(e.target.value)}>
                 </textarea>
 
-                <Button type='submit'
-                    className='mt-3 self'>
+                <Button type='submit' color='rgb(167, 139, 250)'
+                    className='mt-3 text-lg'>
                     Submit
                 </Button>
             </form>

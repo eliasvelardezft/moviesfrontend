@@ -76,7 +76,7 @@ class Login extends Component {
                 onChange={(e) => this.setState({password:e.target.value})}
                 type='password'
               />
-              <Button onClick={this.handleLogin}
+              <Button onClick={this.handleLogin} color='rgb(167, 139, 250)'
                 className='mt-12'> 
                 Log in
               </Button>

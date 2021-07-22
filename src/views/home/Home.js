@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
-import { Movie, MovieDetail, AddMovie, EditMovie, UserHeader } from '../../components';
+import { MovieDetail, AddMovie, EditMovie, UserHeader, Button } from '../../components';
 import { get, patch, post, httpdelete } from '../../functions';
 import urls from '../../apiUrls';
+
+import bg from '../../img/bg.jpg';
 
 
 const Home = (props) => {
@@ -53,10 +55,7 @@ const Home = (props) => {
     setSorting(event.target.value);
   }
 
-  const [addMovieModal, setAddMovieModal] = useState(false);
-  const addMovie = () => {
-    setAddMovieModal(prev => !prev);
-  }
+
 
   const submitMovie = (movie, isEdit) => {
     if (!isEdit) {
@@ -81,10 +80,17 @@ const Home = (props) => {
         });
     }
   }
+  const [addMovieModal, setAddMovieModal] = useState(false);
+  const addMovie = () => {
+    setEditMovieModal(false);
+    setAddMovieModal(prev => !prev);
+  }
+
   const [editMovieModal, setEditMovieModal] = useState(false)
   const editMovie = (movie) => {
     setSelectedMovie(movie);
     setEditMovieModal(prev => !prev);
+    setAddMovieModal(false);
   }
   const deleteMovie = (m) => {
     httpdelete(`${urls.getMovies}${m.id}/`, token)
@@ -124,21 +130,14 @@ const Home = (props) => {
   return (
     !isDetail 
     ? 
-    <div className='flex flex-col relative h-screen m-0'>
+    <div 
+      className='h-full
+        backdrop-filter backdrop-blur-xl 
+        bg-opacity-40 flex flex-col'>
       <UserHeader user={user} removeMovieFromWatchlist={removeMovieFromWatchlist}/>
-      <div className='flex'>
-        <h1 className='text-red-500e'>Movies</h1>
-        <button onClick={addMovie} 
-          className='mx-7 p-1 rounded-lg border-gray-200 bg-blue-300'>
-          Add movie
-        </button>
-        <select name="sorting" id="sorting" onChange={sortMovies}>
-          <option value="descDate">date descending</option>
-          <option value="ascDate">date ascending</option>
-          <option value="descRating">rating descending</option>
-          <option value="ascRating">rating ascending</option>
-        </select>
-      </div>
+      <Button onClick={addMovie} className='mx-2 self-start' color='rgb(80, 142, 242)'>
+        Add movie
+      </Button>
       {
           addMovieModal
           ?
@@ -150,53 +149,60 @@ const Home = (props) => {
           :
           null
       }
+      <div className='flex'>
+        <h1 className='text-xl mx-4 my-2'>Movies</h1>
+        <select name="sorting" id="sorting" onChange={sortMovies}>
+          <option value="descDate">date descending</option>
+          <option value="ascDate">date ascending</option>
+          <option value="descRating">rating descending</option>
+          <option value="ascRating">rating ascending</option>
+        </select>
+      </div>
 
-          <table className='text-center'>
+          <table className='text-center mx-4 border-separate spacing'>
               <thead>
-                <tr>
-                  <th className='border-2 border-purple-300'>Title</th>
-                  <th className='border-2 border-purple-300'>Release date</th>
-                  <th className='border-2 border-purple-300'>Genre</th>
-                  <th className='border-2 border-purple-300'>Average rating</th>
-                  <th className='border-2 border-purple-300'>Edit</th>
-                  <th className='border-2 border-purple-300'>Delete</th>
-                  <th className='border-2 border-purple-300'>Watch later</th>
-                  <th className='border-2 border-purple-300'>See more</th>
+                <tr className='bg-purple-100'>
+                  <th className='rounded-l-lg'>Title</th>
+                  <th>Release date</th>
+                  <th>Genre</th>
+                  <th>Average rating</th>
+                  <th>Edit</th>
+                  <th>Delete</th>
+                  <th>Watch later</th>
+                  <th className='rounded-r-lg'>See more</th>
                 </tr>
               </thead>
               <tbody>
                 {
-                  movies.map(m => {
-                    {/* console.log(`m.user: ${m.user} ${user}`)
-                    console.log(`ES?: ${m.title} ${m.user === user.username || m.user === null}`); */}
+                  movies.map((m, index) => {
+                    let bgColor = (index % 2 === 0) ? 'bg-yellow-200' : 'bg-purple-200';
                     return(
-                      <tr key={m.id}>
-                        <td className='border-2 border-purple-300'>{m.title}</td>
-                        <td className='border-2 border-purple-300'>{m.release_date}</td>
-                        <td className='border-2 border-purple-300'>{m.genre}</td>
-                        <td className='border-2 border-purple-300'>{m.average_rating}</td>
-                        <td className='border-2 border-purple-300'>
-                          <button onClick={() => editMovie(m)} 
-                            className={`${m.user === user.username || m.user === null ? '' : 'hidden'}
-                              mx-7 p-1 rounded-lg border-gray-200 bg-blue-300`}>
+                      <tr key={m.id} className={bgColor}>
+                        <td className='rounded-l-lg'>{m.title}</td>
+                        <td>{m.release_date}</td>
+                        <td>{m.genre}</td>
+                        <td>{m.average_rating}</td>
+                        <td>
+                          <Button onClick={() => editMovie(m)} color='rgb(80, 142, 242)'
+                            className={`${m.user === user.username || m.user === null ? '' : 'hidden'}`}>
                             Edit
-                          </button>
+                          </Button>
                         </td>
-                        <td className='border-2 border-purple-300'>
-                          <button onClick={() => deleteMovie(m)} 
-                            className={` ${m.user === user.username || m.user === null ? '' : 'hidden'}
-                            mx-7 p-1 rounded-lg border-gray-200 bg-blue-300`}>
+                        <td>
+                          <Button onClick={() => deleteMovie(m)} color='rgb(237, 88, 88)'
+                            className={` ${m.user === user.username || m.user === null ? '' : 'hidden'}`}>
                             Delete
-                          </button>
+                          </Button>
                         </td>
-                        <td className='border-2 border-purple-300'>
-                          <button onClick={() => addToWatchList(m)}
-                            className='mx-7 p-1 rounded-lg border-gray-200 bg-blue-300'>
+                        <td>
+                          <Button onClick={() => addToWatchList(m)} color='rgb(240, 157, 79)'> 
                             watch later
-                          </button>
+                          </Button>
                         </td>
-                        <td className='border-2 border-purple-300'>
-                          <button onClick={() => seeMore(m)}>See more!</button>
+                        <td className='rounded-r-lg'>
+                          <Button onClick={() => seeMore(m)} color='rgb(69, 204, 90)'>
+                            See more!
+                          </Button>
                         </td>
                       </tr>
                     )
@@ -207,17 +213,19 @@ const Home = (props) => {
 
       
       <div className='bottom-0'>
-        <button onClick={logout}>Logout</button>
+        <Button onClick={logout} color='rgb(237, 88, 88)'>
+          Logout
+        </Button>
       </div>
     </div>
     :
     <div className='flex flex-col relative'>
-      <MovieDetail movie={selectedMovie}/>
+      <MovieDetail m={selectedMovie}/>
       <div className='absolute bottom-0'>
-        <button onClick={seeMore} 
+        <Button onClick={seeMore} 
           className='rounded-lg border-gray-200 bg-blue-300 absolute bottom-0'>
           Back!
-        </button>
+        </Button>
       </div>
     </div>
   )
