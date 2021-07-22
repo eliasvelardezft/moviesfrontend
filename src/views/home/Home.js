@@ -4,8 +4,6 @@ import { MovieDetail, AddMovie, EditMovie, UserHeader, Button } from '../../comp
 import { get, patch, post, httpdelete } from '../../functions';
 import urls from '../../apiUrls';
 
-import bg from '../../img/bg.jpg';
-
 
 const Home = (props) => {
 
@@ -41,7 +39,6 @@ const Home = (props) => {
     get(urls.getMovies, token, { 'searchsort': sorting })
     .then(data => {
       setMovies(data);
-      console.log('DATA: ', data);
     })
   }
 
@@ -121,7 +118,6 @@ const Home = (props) => {
     })
       .then(data => {
         getUser();
-        console.log('hola');
       })
   }
 
@@ -130,7 +126,7 @@ const Home = (props) => {
   return (
     !isDetail 
     ? 
-    <div 
+    <div
       className='h-full
         backdrop-filter backdrop-blur-xl 
         bg-opacity-40 flex flex-col'>

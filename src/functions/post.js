@@ -5,7 +5,8 @@ const post = (url, data, token=true) => {
   if(token) {
     he['Authorization'] = `Token ${localStorage.getItem('token')}`
   }
-  
+
+
   return fetch(url, {
       mode: 'cors',
       method: 'POST',
@@ -16,7 +17,7 @@ const post = (url, data, token=true) => {
         if(res.ok) {
             return res.json();
         } else {
-            return res.status;
+            return res;
         }
     })
     .then(res => res);

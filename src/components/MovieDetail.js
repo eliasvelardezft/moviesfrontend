@@ -1,7 +1,7 @@
 import React, { useEffect, useState} from 'react';
 
 import { Rating, AddRating } from '.';
-import { post, patch, get } from '../functions';
+import { patch, get } from '../functions';
 import urls from '../apiUrls';
 
 

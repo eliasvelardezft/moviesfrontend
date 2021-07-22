@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState } from 'react';
 
 import { Label, Button, InputField } from '.';
 
@@ -25,8 +25,6 @@ const EditMovie = (props) => {
         document.getElementById('edit-movie-form').reset();
 
     }
-
-    let movie = props.movie
     return(
         <div>
             <form action="" id='edit-movie-form' onSubmit={submitMovie}

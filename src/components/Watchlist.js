@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
-import { get, patch } from '../functions';
-import urls from '../apiUrls';
 import { Button } from '.';
 
 const Watchlist = ({ list, removeMovie, visible }) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { Label, Button } from '.';
 
@@ -17,7 +17,6 @@ const AddRating = (props) => {
         }
 
         props.submitRating(ratingObj);
-        console.log('RATING OBJ: ', ratingObj);
         setRating(1);
 
     }

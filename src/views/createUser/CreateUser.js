@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { Button, InputField, Label } from '../../components';
-import { get, post } from '../../functions';
+import { post } from '../../functions';
 import urls from '../../apiUrls';
 
 import bg from '../../img/bg.jpg';
@@ -25,9 +25,10 @@ class CreateUser extends Component {
       first_name: this.state.firstName,
       last_name: this.state.lastName,
       password: this.state.password,
+      movies_watchlist: []
     }
     
-    post(urls.usersUrl, data)
+    post(urls.usersUrl, data, false)
       .then(res => {
         if(res.code === 'ok') {
           alert('User created successfully');
@@ -45,7 +46,9 @@ class CreateUser extends Component {
 
   render() {
     return(
-      <div
+      <div style={{
+        backgroundImage: `url(${bg})`,
+      }}
         className='flex flex-col h-screen items-center 
           backdrop-filter backdrop-blur-xl 
           bg-opacity-40 bg-no-repeat bg-cover relative'>
