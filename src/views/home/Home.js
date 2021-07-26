@@ -138,9 +138,9 @@ const Home = (props) => {
     !isDetail 
     ? 
     <div
-      className='min-h-screen relative
+      className='min-h-screen relative p-2
         backdrop-filter backdrop-blur-xl 
-        bg-opacity-40 flex flex-col'>
+        bg-opacity-40 flex flex-col justify-center'>
       <UserHeader user={user} removeMovieFromWatchlist={removeMovieFromWatchlist}/>
       <Button onClick={addMovie} className='mx-2 self-start' color='rgb(80, 142, 242)'>
         Add movie
@@ -166,7 +166,7 @@ const Home = (props) => {
         </select>
       </div>
 
-          <table className='text-center mx-4 border-separate spacing'>
+          <table className='text-center mx-4 border-separate spacing mb-auto'>
               <thead>
                 <tr className='bg-purple-100'>
                   <th className='rounded-l-lg'>Title</th>
@@ -217,9 +217,9 @@ const Home = (props) => {
                 }
               </tbody>
           </table>
-
-      <footer className='absolute bottom-0 flex flex-col self-center items-center justify-center mb-5'>
-        <div className='mb-4'>
+      
+      <div className='bottom-0 mt-auto justify-self-end'>
+        <footer className='flex flex-col self-center items-center justify-center'>
           <ul className='flex justify-center'>
             {
               [...new Array(pages)].map((p, i) => {
@@ -234,14 +234,13 @@ const Home = (props) => {
               })
             }
           </ul>
-        </div>
 
-        <div className='bottom-0'>
           <Button onClick={logout} color='rgb(237, 88, 88)'>
             Logout
           </Button>
-        </div>
-      </footer>
+        </footer>
+      </div>
+      
     </div>
     :
     <div className='flex flex-col relative'>
