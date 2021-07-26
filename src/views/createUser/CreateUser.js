@@ -30,12 +30,13 @@ class CreateUser extends Component {
     
     post(urls.usersUrl, data, false)
       .then(res => {
+        console.log('RES: ', res)
         if(res.code === 'ok') {
           alert('User created successfully');
           this.props.history.push('/');
         }
         else {
-          alert('Error creating user');
+          alert(res.username);
         }
       })
   }

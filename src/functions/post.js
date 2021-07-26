@@ -17,7 +17,7 @@ const post = (url, data, token=true) => {
         if(res.ok) {
             return res.json();
         } else {
-            return res;
+            return res.json();
         }
     })
     .then(res => res);

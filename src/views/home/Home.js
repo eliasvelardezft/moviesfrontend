@@ -19,7 +19,8 @@ const Home = (props) => {
     getUser();
   }, [])
   const [token, setToken] = useState(localStorage.getItem('token'));
-
+  
+  const [pages, setPages] = useState(1);
   const [movies, setMovies] = useState([]);
   const [sorting, setSorting] = useState('descDate')
   useEffect(() => {
@@ -35,10 +36,20 @@ const Home = (props) => {
     getMovies();
   }
 
-  const getMovies = () => {
-    get(urls.getMovies, token, { 'searchsort': sorting })
+  const [selectedPage, setSelectedPage] = useState(1); 
+  const changePage = (page) => {
+    getMovies(page);
+    setSelectedPage(page);
+  }
+
+  const getMovies = (page='') => {
+    if(page) {
+      page = `&page=${page}`
+    }
+    get(`${urls.getMovies}${page}`, token, { 'searchsort': sorting })
     .then(data => {
-      setMovies(data);
+      setMovies(data.results);
+      setPages(Math.ceil(data.count/5));
     })
   }
 
@@ -127,7 +138,7 @@ const Home = (props) => {
     !isDetail 
     ? 
     <div
-      className='h-full
+      className='min-h-screen relative
         backdrop-filter backdrop-blur-xl 
         bg-opacity-40 flex flex-col'>
       <UserHeader user={user} removeMovieFromWatchlist={removeMovieFromWatchlist}/>
@@ -207,12 +218,30 @@ const Home = (props) => {
               </tbody>
           </table>
 
-      
-      <div className='bottom-0'>
-        <Button onClick={logout} color='rgb(237, 88, 88)'>
-          Logout
-        </Button>
-      </div>
+      <footer className='absolute bottom-0 flex flex-col self-center items-center justify-center mb-5'>
+        <div className='mb-4'>
+          <ul className='flex justify-center'>
+            {
+              [...new Array(pages)].map((p, i) => {
+                return(
+                  <li key={i} className='mx-4'>
+                    <button onClick={() => changePage(i+1)}
+                      className={`underline hover:no-underline ${i+1 === selectedPage ? 'text-red-500' : 'text-purple-500'}`}>
+                      {i+1}
+                    </button>
+                  </li>
+                )
+              })
+            }
+          </ul>
+        </div>
+
+        <div className='bottom-0'>
+          <Button onClick={logout} color='rgb(237, 88, 88)'>
+            Logout
+          </Button>
+        </div>
+      </footer>
     </div>
     :
     <div className='flex flex-col relative'>
